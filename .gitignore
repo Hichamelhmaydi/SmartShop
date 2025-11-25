@@ -31,5 +31,21 @@ build/
 
 ### VS Code ###
 .vscode/
-/src/main/resources/application-dev.yml
-/src/main/resources/application-prod.yml
+# Fichiers de configuration sensibles
+application*.yml
+application*.yaml
+*.yml
+*.yaml
+# Fichiers de logs
+*.log
+logs/
+
+# Dossiers de build
+target/
+build/
+*.jar
+*.war
+*.ear
+# Système
+.DS_Store
+Thumbs.db
