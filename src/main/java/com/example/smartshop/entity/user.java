@@ -1,0 +1,29 @@
+package com.example.smartshop.entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Entity
+@Table(name = "users")
+
+@Data
+public class user {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(nullable = false, unique = true)
+    private String username;
+    
+    @Column(nullable = false)
+    private String password;
+    
+    @Column(nullable = false)
+    private String role; // ADMIN ou CLIENT
+
+    public user( String username, String password, String role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+}
