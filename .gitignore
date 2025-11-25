@@ -31,21 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-# Fichiers de configuration sensibles
-application*.yml
-application*.yaml
-*.yml
-*.yaml
-# Fichiers de logs
-*.log
-logs/
-
-# Dossiers de build
-target/
-build/
-*.jar
-*.war
-*.ear
-# Système
-.DS_Store
-Thumbs.db
