@@ -24,7 +24,7 @@ public class Client extends User {
     @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false)
-    private NiveauFidelite niveauFidelite;
+    private NiveauFidelite niveauFidelite = NiveauFidelite.BASIC;
     @Column(nullable = false)
     private int totalCommandes;
     @Column(nullable = false)
@@ -34,5 +34,5 @@ public class Client extends User {
     @Column(nullable = false)
     private LocalTime derniereCommande;
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-        private List<Commande> commandes;
+    private List<Commande> commandes;
 }

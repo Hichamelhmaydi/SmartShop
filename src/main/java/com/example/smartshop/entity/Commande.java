@@ -42,7 +42,7 @@ public class Commande {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatutCommande statut;
+    private StatutCommande statut = StatutCommande.PENDING;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal montantRestant;
