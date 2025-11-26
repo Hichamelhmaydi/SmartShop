@@ -1,11 +1,15 @@
 package com.example.smartshop.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.*;
 
 import java.time.LocalTime;
+import java.util.List;
 
 import com.example.smartshop.enums.NiveauFidelite;
 
@@ -29,5 +33,6 @@ public class Client extends User {
     private LocalTime premiereCommande;
     @Column(nullable = false)
     private LocalTime derniereCommande;
-
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+        private List<Commande> commandes;
 }
