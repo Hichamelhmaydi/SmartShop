@@ -1,0 +1,33 @@
+package com.example.smartshop.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.*;
+
+import java.time.LocalTime;
+
+import com.example.smartshop.enums.NiveauFidelite;
+
+@Entity
+@Table(name = "clients")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class Client extends User {
+
+    @Column(nullable = false, unique = true)
+    private String email;
+    @Column(nullable = false)
+    private NiveauFidelite niveauFidelite;
+    @Column(nullable = false)
+    private int totalCommandes;
+    @Column(nullable = false)
+    private double totalDepenses;
+    @Column(nullable = false)
+    private LocalTime premiereCommande;
+    @Column(nullable = false)
+    private LocalTime derniereCommande;
+
+}
