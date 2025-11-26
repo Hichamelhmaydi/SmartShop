@@ -1,13 +1,18 @@
 package com.example.smartshop.entity;
 
+import com.example.smartshop.enums.UserRole;
+
 import jakarta.persistence.*;
+import lombok.*;
 import lombok.Data;
 
 @Entity
 @Table(name = "users")
-
 @Data
-public class user {
+@AllArgsConstructor
+@NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,11 +24,5 @@ public class user {
     private String password;
     
     @Column(nullable = false)
-    private String role; // ADMIN ou CLIENT
-
-    public user( String username, String password, String role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
+    private UserRole role; 
 }
