@@ -5,10 +5,10 @@ spring:
     name: smartshop
 
 server:
-  port: ${SERVER_PORT}
+  port: 8080
   servlet:
     session:
-      timeout: ${SESSION_TIMEOUT}
+      timeout: 30m
 
 app:
   vat:
