@@ -4,7 +4,6 @@ import com.example.smartshop.enums.UserRole;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.Data;
 
 @Entity
 @Table(name = "users")
@@ -13,16 +12,18 @@ import lombok.Data;
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(nullable = false, unique = true)
     private String username;
-    
+
     @Column(nullable = false)
     private String password;
-    
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRole role; 
+    private UserRole role;
 }
