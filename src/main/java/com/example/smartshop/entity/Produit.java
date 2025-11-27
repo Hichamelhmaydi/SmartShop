@@ -1,5 +1,6 @@
 package com.example.smartshop.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class Produit {
     @Column(nullable = false)
     private String nom;
     @Column(nullable = false)
-    private Double prixHt;
+    private BigDecimal  prixHt;
     @Column(nullable = false)
     private int stock;
     @Column(name = "supprime")
