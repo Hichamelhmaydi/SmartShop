@@ -1,17 +1,17 @@
 package com.example.smartshop.mapper;
 
-import com.example.smartshop.dto.request.PaiementRequestDTO;
-import com.example.smartshop.dto.response.PaiementResponseDTO;
-import com.example.smartshop.entity.Paiement;
+import com.example.smartshop.dto.request.PaymentRequestDTO;
+import com.example.smartshop.dto.response.PaymentResponseDTO;
+import com.example.smartshop.entity.Payment;
 import org.mapstruct.Mapper;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface PaiementMapper {
 
-    Paiement toEntity(PaiementRequestDTO dto);
+    Payment toEntity(PaymentRequestDTO dto);
 
-    PaiementResponseDTO toDto(Paiement entity);
+    PaymentResponseDTO toDto(Payment entity);
 
-    List<PaiementResponseDTO> toDtoList(List<Paiement> entities);
+    List<PaymentResponseDTO> toDtoList(List<Payment> entities);
 }

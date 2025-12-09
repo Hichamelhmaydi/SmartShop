@@ -30,4 +30,12 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
+
+    Long getId() {
+       return id;
+    }
+
+    String getUsername() {
+        return username;
+    }
 }

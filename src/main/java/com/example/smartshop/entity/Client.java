@@ -35,4 +35,15 @@ public class Client extends User {
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> orders;
+    public Long getId() {
+        return super.getId();
+    }
+    
+    public String getUsername() {
+        return super.getUsername();
+    }
+    
+    public List<Order> getOrders() {
+        return orders;
+    }
 }
