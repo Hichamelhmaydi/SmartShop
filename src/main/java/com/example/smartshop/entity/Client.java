@@ -1,20 +1,13 @@
 package com.example.smartshop.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.*;
-
-import java.time.LocalTime;
+import com.example.smartshop.enums.CustomerTier;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
-
-import com.example.smartshop.enums.NiveauFidelite;
-import com.example.smartshop.enums.UserRole;
+import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Data;
 
 @Entity
 @Table(name = "clients")
@@ -29,17 +22,17 @@ public class Client extends User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private NiveauFidelite niveauFidelite = NiveauFidelite.BASIC;
+    private CustomerTier customerTier = CustomerTier.BASIC;
 
     @Column(nullable = false)
-    private int totalCommandes = 0;
+    private int totalOrders = 0;
 
     @Column(nullable = false)
-    private double totalDepenses = 0;
+    private double totalSpent = 0.0;
 
-    private LocalTime premiereCommande;
-    private LocalTime derniereCommande;
+    private LocalDateTime firstOrderDate;
+    private LocalDateTime lastOrderDate;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Commande> commandes;
+    private List<Order> orders;
 }

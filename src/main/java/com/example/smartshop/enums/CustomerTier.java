@@ -1,6 +1,6 @@
 package com.example.smartshop.enums;
 
-public enum NiveauFidelite {
+public enum CustomerTier {
     BASIC,
     SILVER,
     GOLD,

@@ -1,56 +1,51 @@
 package com.example.smartshop.entity;
 
-import com.example.smartshop.enums.StatutPaiement;
-import com.example.smartshop.enums.TypePaiement;
+import com.example.smartshop.enums.PaymentStatus;
+import com.example.smartshop.enums.PaymentType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "paiements")
+@Table(name = "payments")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Paiement {
+public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private Integer numeroPaiement;
+    private Integer paymentNumber;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal montant;
+    private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TypePaiement typePaiement;
+    private PaymentType paymentType;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatutPaiement statut = StatutPaiement.EN_ATTENTE;
+    private PaymentStatus status = PaymentStatus.PENDING;
 
     @Column(nullable = false)
-    private LocalDate datePaiement;
+    private LocalDate paymentDate;
 
-    @Column(nullable = false)
-    private LocalDate dateEncaissement;
+    private LocalDate settlementDate;
 
-    @Column(nullable = false)
     private String reference;
 
-    @Column(nullable = false)
-    private String banque;
+    private String bank;
 
-    @Column(nullable = false)
-    private LocalDate dateCheance;
+    private LocalDate dueDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "commande_id", nullable = false)
-    private Commande commande;
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 }

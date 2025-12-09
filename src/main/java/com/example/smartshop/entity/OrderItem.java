@@ -4,34 +4,33 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "lignes_commande")
+@Table(name = "order_items")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LigneCommande {
+public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private Integer quantite;
+    private Integer quantity;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal prixUnitaireHt;
+    private BigDecimal unitPrice;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalLigne;
+    private BigDecimal lineTotal;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "commande_id", nullable = false)
-    private Commande commande;
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "produit_id", nullable = false)
-    private Produit produit;
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 }

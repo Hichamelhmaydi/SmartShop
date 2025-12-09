@@ -1,60 +1,61 @@
 package com.example.smartshop.entity;
 
-import com.example.smartshop.enums.StatutCommande;
-
+import com.example.smartshop.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "commandes")
+@Table(name = "orders")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Commande {
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private LocalDate dateCreation;
+    private LocalDateTime creationDate;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal sousTotalHt;
+    private BigDecimal subtotal;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal montantReduction;
+    private BigDecimal discountAmount = BigDecimal.ZERO;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal montantTva;
+    private BigDecimal vatAmount;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalTtc;
+    private BigDecimal totalAmount;
 
-    @Column(nullable = false)
-    private String codePromo;
+    private String promoCode;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatutCommande statut = StatutCommande.PENDING;
+    private OrderStatus status = OrderStatus.PENDING;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal montantRestant;
+    private BigDecimal remainingAmount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
-    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<LigneCommande> lignesCommande;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<OrderItem> orderItems;
 
-    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Paiement> paiements;
-
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Payment> payments;
+    
+    @PrePersist
+    protected void onCreate() {
+        creationDate = LocalDateTime.now();
+    }
 }
