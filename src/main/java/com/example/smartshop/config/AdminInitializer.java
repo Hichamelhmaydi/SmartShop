@@ -1,6 +1,7 @@
 package com.example.smartshop.config;
 
 import com.example.smartshop.entity.Admin;
+import com.example.smartshop.entity.User;
 import com.example.smartshop.enums.UserRole;
 import com.example.smartshop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,25 +19,17 @@ public class AdminInitializer {
 
     @Bean
     @Transactional
-    public CommandLineRunner initializeAdmin() {
+    public CommandLineRunner initAdmin() {
         return args -> {
-            boolean adminExists = userRepository.existsByRole(UserRole.ADMIN);
-            
-            if (!adminExists) {
-                String hashedPassword = BCrypt.hashpw("admin123", BCrypt.gensalt());
-                
+            if (userRepository.findByUsername("admin").isEmpty()) {
                 Admin admin = Admin.builder()
-                        .username("admin")
-                        .password(hashedPassword)
-                        .role(UserRole.ADMIN)
-                        .build();
+                    .username("admin")
+                    .password(BCrypt.hashpw("admin123", BCrypt.gensalt()))
+                    .role(UserRole.ADMIN)
+                    .build();
                 
                 userRepository.save(admin);
-                System.out.println("✓ Admin user created successfully");
-                System.out.println("Username: admin");
-                System.out.println("Password: admin123");
-            } else {
-                System.out.println("✓ Admin user already exists");
+                System.out.println("Admin user created successfully");
             }
         };
     }
