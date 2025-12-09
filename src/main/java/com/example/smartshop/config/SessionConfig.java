@@ -14,5 +14,3 @@ public class SessionConfig {
         return session;
     }
 }
-
-
