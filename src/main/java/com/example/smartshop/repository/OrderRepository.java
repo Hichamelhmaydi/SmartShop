@@ -1,0 +1,37 @@
+package com.example.smartshop.repository;
+
+import com.example.smartshop.entity.Order;
+import com.example.smartshop.enums.OrderStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Repository
+public interface OrderRepository extends JpaRepository<Order, Long> {
+    
+    List<Order> findByClientId(Long clientId);
+    
+    Page<Order> findByClientId(Long clientId, Pageable pageable);
+    
+    @Query("SELECT o FROM Order o WHERE o.status = :status")
+    Page<Order> findByStatus(@Param("status") OrderStatus status, Pageable pageable);
+    
+    @Query("SELECT o FROM Order o WHERE o.creationDate BETWEEN :startDate AND :endDate")
+    Page<Order> findByDateRange(@Param("startDate") LocalDateTime startDate, 
+                                @Param("endDate") LocalDateTime endDate, 
+                                Pageable pageable);
+    
+    @Query("SELECT o FROM Order o WHERE o.client.id = :clientId AND o.status = 'CONFIRMED'")
+    List<Order> findConfirmedOrdersByClient(@Param("clientId") Long clientId);
+    
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.client.id = :clientId AND o.status = 'CONFIRMED'")
+    Long countConfirmedOrdersByClient(@Param("clientId") Long clientId);
+    
+    @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.client.id = :clientId AND o.status = 'CONFIRMED'")
+    Double sumConfirmedOrdersByClient(@Param("clientId") Long clientId);
+}
