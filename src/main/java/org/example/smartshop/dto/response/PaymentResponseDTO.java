@@ -1,0 +1,33 @@
+package org.example.smartshop.dto.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.example.smartshop.enums.PaymentMethod;
+import org.example.smartshop.enums.PaymentStatus;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+
+public class PaymentResponseDTO {
+
+    private Long id;
+    private Long orderId;
+    private Integer paymentNumber;
+    private BigDecimal amount;
+    private PaymentMethod paymentMethod;
+    private PaymentStatus status;
+    private String reference;
+    private String bankName;
+    private LocalDate dueDate;
+    private LocalDateTime paymentDate;
+    private LocalDateTime collectionDate;
+    private LocalDateTime createdAt;
+}
