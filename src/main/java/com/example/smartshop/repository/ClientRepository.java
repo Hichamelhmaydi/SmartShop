@@ -6,11 +6,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
+import java.util.Optional;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
+
     Optional<Client> findByEmail(String email);
-    
-    @Query("SELECT c FROM Client c WHERE c.deleted = false")
-    List<Client> findAllActive();
+
+    boolean existsByEmail(String email);
+
+    Optional<Client> findByUserId(Long userId);
+
 }

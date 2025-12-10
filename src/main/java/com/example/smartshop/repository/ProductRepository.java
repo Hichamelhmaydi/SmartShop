@@ -11,15 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    
-    @Query("SELECT p FROM Product p WHERE p.deleted = false")
-    Page<Product> findAllActive(Pageable pageable);
-    
-    @Query("SELECT p FROM Product p WHERE p.deleted = false AND p.name LIKE %:name%")
-    Page<Product> findByNameContaining(String name, Pageable pageable);
-    
-    @Query("SELECT p FROM Product p WHERE p.deleted = false AND p.stock > 0")
-    List<Product> findAvailableProducts();
-    
-    Optional<Product> findByIdAndDeletedFalse(Long id);
+
+    Page<Product> findByDeletedFalse(Pageable pageable);
+
+    Page<Product> findByNameContainingIgnoreCaseAndDeletedFalse(String name, Pageable pageable);
 }
