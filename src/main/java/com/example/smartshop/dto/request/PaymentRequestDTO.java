@@ -1,25 +1,27 @@
 package com.example.smartshop.dto.request;
 
-import com.example.smartshop.enums.PaymentType;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import com.example.smartshop.enums.PaymentMethod;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PaymentRequestDTO {
-    @NotNull(message = "Order ID is required")
-    private Long orderId;
-    
+
     @NotNull(message = "Amount is required")
-    @Min(value = 0, message = "Amount must be positive")
+    @DecimalMin(value = "0.01", message = "Amount must be greater than 0")
     private BigDecimal amount;
-    
-    @NotNull(message = "Payment type is required")
-    private PaymentType paymentType;
-    
+
+    @NotNull(message = "Payment method is required")
+    private PaymentMethod paymentMethod;
+
     private String reference;
-    private String bank;
+    private String bankName;
     private LocalDate dueDate;
 }

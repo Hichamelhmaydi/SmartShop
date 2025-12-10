@@ -8,28 +8,44 @@ import com.example.smartshop.exception.UnauthorizedException;
 import com.example.smartshop.repository.UserRepository;
 import com.example.smartshop.service.interfaces.IAuthService;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class AuthServiceImpl implements IAuthService {
 
     private final UserRepository userRepository;
 
+    @Autowired
+    public AuthServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
     public AuthResponseDTO login(AuthRequestDTO request, HttpSession session) {
+        // Récupérer l'utilisateur par son username
         Optional<User> userOpt = userRepository.findByUsername(request.getUsername());
 
-        if (userOpt.isEmpty() || !BCrypt.checkpw(request.getPassword(), userOpt.get().getPassword())) {
+        // Vérifier si l'utilisateur existe et si le mot de passe correspond
+        if (userOpt.isEmpty()) {
             throw new UnauthorizedException("Invalid username or password");
         }
 
         User user = userOpt.get();
 
+        boolean passwordMatches = BCrypt.checkpw(request.getPassword(), user.getPassword());
+        if (!passwordMatches) {
+            throw new UnauthorizedException("Invalid username or password");
+        }
+
         session.setAttribute("userId", user.getId());
+        session.setAttribute("username", user.getUsername());
+        session.setAttribute("role", user.getRole().toString());
+
+        // Créer la réponse
         AuthResponseDTO response = new AuthResponseDTO();
         response.setId(user.getId());
         response.setUsername(user.getUsername());
@@ -51,12 +67,29 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     public boolean isAdmin(HttpSession session) {
-        return UserRole.ADMIN.name().equals(session.getAttribute("role"));
+        Object roleObj = session.getAttribute("role");
+        return roleObj != null && roleObj.toString().equals("ADMIN");
     }
 
     @Override
     public Long getCurrentUserId(HttpSession session) {
-        Object userId = session.getAttribute("userId");
-        return userId != null ? Long.parseLong(userId.toString()) : null;
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return null;
+        }
+
+        try {
+            if (userIdObj instanceof Long) {
+                return (Long) userIdObj;
+            } else if (userIdObj instanceof Integer) {
+                return ((Integer) userIdObj).longValue();
+            } else if (userIdObj instanceof String) {
+                return Long.parseLong((String) userIdObj);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

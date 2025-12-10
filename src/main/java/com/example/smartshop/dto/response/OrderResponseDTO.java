@@ -1,24 +1,39 @@
 package com.example.smartshop.dto.response;
 
-import com.example.smartshop.enums.OrderStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import com.example.smartshop.enums.OrderStatus;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.example.smartshop.enums.OrderStatus;
+
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class OrderResponseDTO {
+
     private Long id;
-    private LocalDateTime creationDate;
-    private BigDecimal subtotal;
-    private BigDecimal discountAmount;
-    private BigDecimal vatAmount;
-    private BigDecimal totalAmount;
-    private String promoCode;
-    private OrderStatus status;
-    private BigDecimal remainingAmount;
     private Long clientId;
     private String clientName;
+    private OrderStatus status;
+    private String promoCode;
+
+    private BigDecimal subtotalHT;
+    private BigDecimal loyaltyDiscount;
+    private BigDecimal promoDiscount;
+    private BigDecimal totalDiscount;
+    private BigDecimal amountHT;
+    private BigDecimal tvaAmount;
+    private BigDecimal totalTTC;
+    private BigDecimal remainingAmount;
+
     private List<OrderItemResponseDTO> items;
-    private List<PaymentResponseDTO> payments;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

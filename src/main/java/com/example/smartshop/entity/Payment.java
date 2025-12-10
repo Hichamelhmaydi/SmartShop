@@ -1,51 +1,67 @@
 package com.example.smartshop.entity;
 
-import com.example.smartshop.enums.PaymentStatus;
-import com.example.smartshop.enums.PaymentType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import com.example.smartshop.enums.PaymentMethod;
+import com.example.smartshop.enums.PaymentStatus;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "payments")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
+
+    @Column(name = "payment_number", nullable = false)
     private Integer paymentNumber;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PaymentType paymentType;
+    @Column(name = "payment_method", nullable = false)
+    private PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PaymentStatus status = PaymentStatus.PENDING;
+    @Builder.Default
+    private PaymentStatus status = PaymentStatus.EN_ATTENTE;
 
-    @Column(nullable = false)
-    private LocalDate paymentDate;
-
-    private LocalDate settlementDate;
-
+    @Column(length = 50)
     private String reference;
 
-    private String bank;
+    @Column(name = "bank_name", length = 100)
+    private String bankName;
 
+    @Column(name = "due_date")
     private LocalDate dueDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
+    @Column(name = "payment_date", nullable = false)
+    private LocalDateTime paymentDate;
+
+    @Column(name = "collection_date")
+    private LocalDateTime collectionDate;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        if (this.paymentDate == null) {
+            this.paymentDate = LocalDateTime.now();
+        }
+    }
 }

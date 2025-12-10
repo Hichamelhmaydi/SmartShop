@@ -1,17 +1,22 @@
 package com.example.smartshop.dto.request;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+
 import java.util.List;
 
 @Data
 public class OrderRequestDTO {
-    @NotNull(message = "Client ID is required")
+
+    @NotNull
     private Long clientId;
-    
-    @NotEmpty(message = "Order items cannot be empty")
+
+    @NotEmpty
     private List<OrderItemRequestDTO> items;
-    
+
+    @Pattern(regexp = "^PROMO-[A-Z0-9]{4}$", message = "Promo code must match PROMO-XXXX")
     private String promoCode;
 }

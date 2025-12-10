@@ -1,7 +1,7 @@
 package com.example.smartshop.enums;
 
 public enum PaymentStatus {
-    PENDING,
-    SETTLED,
-    REJECTED
+    EN_ATTENTE,
+    ENCAISSE,
+    REJETE
 }
