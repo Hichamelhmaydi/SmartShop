@@ -4,13 +4,9 @@ import com.example.smartshop.entity.Client;
 import com.example.smartshop.enums.CustomerTier;
 import java.math.BigDecimal;
 
-public interface ILoyaltyService {
+public interface LoyaltyService {
 
     CustomerTier calculateTier(Client client);
 
-    BigDecimal calculateDiscount(Client client, BigDecimal subtotal);
-
-    void updateClientTier(Client client);
-
-    void updateClientStats(Client client, BigDecimal orderAmount);
+    BigDecimal calculateDiscount(CustomerTier tier, BigDecimal subtotalHT);
 }

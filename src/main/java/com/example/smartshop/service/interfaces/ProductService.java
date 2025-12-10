@@ -2,22 +2,25 @@ package com.example.smartshop.service.interfaces;
 
 import com.example.smartshop.dto.request.ProductRequestDTO;
 import com.example.smartshop.dto.response.ProductResponseDTO;
+import com.example.smartshop.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface IProductService {
+public interface ProductService {
 
     ProductResponseDTO createProduct(ProductRequestDTO request);
 
     ProductResponseDTO getProductById(Long id);
 
-    Page<ProductResponseDTO> getAllProducts(Pageable pageable);
+    Page<ProductResponseDTO> getActiveProducts(String search, Pageable pageable);
 
     ProductResponseDTO updateProduct(Long id, ProductRequestDTO request);
 
     void deleteProduct(Long id);
 
-    ProductResponseDTO restoreProduct(Long id);
+    void validateStock(Product product, Integer quantity);
 
-    Page<ProductResponseDTO> searchProducts(String name, Pageable pageable);
+    void decrementStock(Product product, Integer quantity);
+
+    Product getProductEntity(Long id);
 }
