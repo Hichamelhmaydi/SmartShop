@@ -1,95 +1,67 @@
 package com.example.smartshop.service.impl;
 
-import com.example.smartshop.dto.request.AuthRequestDTO;
-import com.example.smartshop.dto.response.AuthResponseDTO;
+import org.springframework.stereotype.Service;
+
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import com.example.smartshop.dto.request.LoginRequestDTO;
+import com.example.smartshop.dto.response.LoginResponseDTO;
 import com.example.smartshop.entity.User;
 import com.example.smartshop.enums.UserRole;
 import com.example.smartshop.exception.UnauthorizedException;
 import com.example.smartshop.repository.UserRepository;
-import com.example.smartshop.service.interfaces.IAuthService;
-import jakarta.servlet.http.HttpSession;
-import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import com.springframework.stereotype.Service;
 
 @Service
-public class AuthServiceImpl implements IAuthService {
+@RequiredArgsConstructor
+public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-
-    @Autowired
-    public AuthServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final HttpSession httpSession;
 
     @Override
-    public AuthResponseDTO login(AuthRequestDTO request, HttpSession session) {
-        // Récupérer l'utilisateur par son username
-        Optional<User> userOpt = userRepository.findByUsername(request.getUsername());
+    public LoginResponseDTO login(LoginRequestDTO request) {
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 
-        // Vérifier si l'utilisateur existe et si le mot de passe correspond
-        if (userOpt.isEmpty()) {
-            throw new UnauthorizedException("Invalid username or password");
+        if (!user.getPassword().equals(request.getPassword())) {
+            throw new UnauthorizedException("Invalid credentials");
         }
 
-        User user = userOpt.get();
+        httpSession.setAttribute("userId", user.getId());
 
-        boolean passwordMatches = BCrypt.checkpw(request.getPassword(), user.getPassword());
-        if (!passwordMatches) {
-            throw new UnauthorizedException("Invalid username or password");
+        Long clientId = null;
+        if (user.getRole() == UserRole.CLIENT && user.getClient() != null) {
+            clientId = user.getClient().getId();
         }
 
-        session.setAttribute("userId", user.getId());
-        session.setAttribute("username", user.getUsername());
-        session.setAttribute("role", user.getRole().toString());
-
-        // Créer la réponse
-        AuthResponseDTO response = new AuthResponseDTO();
-        response.setId(user.getId());
-        response.setUsername(user.getUsername());
-        response.setRole(user.getRole());
-        response.setMessage("Login successful");
-
-        return response;
+        return LoginResponseDTO.builder()
+                .userId(user.getId())
+                .username(user.getUsername())
+                .role(user.getRole())
+                .clientId(clientId)
+                .message("Login successful")
+                .build();
     }
 
     @Override
-    public void logout(HttpSession session) {
-        session.invalidate();
+    public void logout() {
+        httpSession.invalidate();
     }
 
     @Override
-    public boolean isAuthenticated(HttpSession session) {
-        return session.getAttribute("userId") != null;
-    }
-
-    @Override
-    public boolean isAdmin(HttpSession session) {
-        Object roleObj = session.getAttribute("role");
-        return roleObj != null && roleObj.toString().equals("ADMIN");
-    }
-
-    @Override
-    public Long getCurrentUserId(HttpSession session) {
-        Object userIdObj = session.getAttribute("userId");
-        if (userIdObj == null) {
-            return null;
+    public User getCurrentUser() {
+        Long userId = (Long) httpSession.getAttribute("userId");
+        if (userId == null) {
+            throw new UnauthorizedException("Not authenticated. Please login.");
         }
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UnauthorizedException("Session invalid. Please login again."));
+    }
 
-        try {
-            if (userIdObj instanceof Long) {
-                return (Long) userIdObj;
-            } else if (userIdObj instanceof Integer) {
-                return ((Integer) userIdObj).longValue();
-            } else if (userIdObj instanceof String) {
-                return Long.parseLong((String) userIdObj);
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            return null;
-        }
+    @Override
+    public boolean isAdmin() {
+        User user = getCurrentUser();
+        return user.getRole() == UserRole.ADMIN;
     }
 }
